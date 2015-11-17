@@ -24,6 +24,7 @@ module BrowserMob
         @port    = Integer(opts[:port] || 8080)
         @timeout = Integer(opts[:timeout] || 10)
         @log     = !!opts[:log]
+        @littleproxy = opts[:little_proxy]
 
         @process = create_process
       end
@@ -54,7 +55,7 @@ module BrowserMob
       private
 
       def create_process
-        process        = ChildProcess.new(@path, "--port", @port.to_s)
+        process        = @little_proxy ? ChildProcess.new(@path, "--port", @port.to_s, "--use-littleproxy", "true") : ChildProcess.new(@path, "--port", @port.to_s)
         process.leader = true
 
         process.io.inherit! if @log
